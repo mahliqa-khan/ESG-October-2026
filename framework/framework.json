@@ -1,0 +1,328 @@
+{
+  "id": "investor-esg-assessment",
+  "name": "Investor ESG Assessment Framework",
+  "version": "0.2.0",
+  "description": "Configurable framework for investor firms to assess ESG risk and management maturity across portfolio companies. Everything here is data: edit this file to change topics, questions, sector weights or scoring bands without touching application code.",
+  "scoreScale": { "min": 1, "max": 5 },
+  "defaultScale": "maturity",
+  "answerScales": {
+    "maturity": [
+      { "label": "No policy or process in place", "score": 1 },
+      { "label": "Informal or ad hoc approach", "score": 2 },
+      { "label": "Formal policy, partially implemented", "score": 3 },
+      { "label": "Implemented, monitored and measured", "score": 4 },
+      { "label": "Independently verified, targets on track", "score": 5 }
+    ]
+  },
+  "riskBands": [
+    { "max": 1.5, "label": "Low", "action": "Monitor. No engagement required this cycle." },
+    { "max": 2.5, "label": "Moderate", "action": "Annual review. Targeted questions at next cycle." },
+    { "max": 3.5, "label": "High", "action": "Engagement plan required within 90 days." },
+    { "max": 5.01, "label": "Severe", "action": "Escalate to investment committee. Consider conditions or exclusion." }
+  ],
+  "sectors": [
+    { "id": "manufacturing", "name": "Manufacturing & Industrials" },
+    { "id": "energy", "name": "Energy & Utilities" },
+    { "id": "financials", "name": "Financial Services" },
+    { "id": "software", "name": "Technology & Software" },
+    { "id": "retail", "name": "Retail & Consumer" },
+    { "id": "realestate", "name": "Real Estate & Construction" },
+    { "id": "healthcare", "name": "Healthcare & Life Sciences" },
+    { "id": "logistics", "name": "Transport & Logistics" }
+  ],
+
+  "universe": {
+    "status": "VERIFIED",
+    "primarySource": "SASB Standards (IFRS Foundation)",
+    "secondarySource": "GRI Universal and Sector Standards",
+    "orientation": "financial",
+    "granularity": "SASB disclosure topic",
+    "decisions": [
+      "Primary universe is SASB, chosen for the investor lens (financial materiality).",
+      "Granularity is SASB disclosure-topic level rather than GRI sub-topic level, for consistency and scoreability.",
+      "GRI is used only to catch impact topics SASB omits; every such addition is recorded in topicSources with orientation impact.",
+      "Every entry requires a resolvable source reference before it may be used in a live assessment."
+    ],
+    "verificationRequired": "Codes and references were checked against the SASB codification and GRI standards by the framework owner. See universeVerification."
+  },
+
+  "universeVerification": {
+    "owner": "Mahliqa Khan",
+    "checkedAgainst": "SASB codification and GRI standards, obtained from the standard setters",
+    "entriesTotal": 89,
+    "entriesVerified": 89,
+    "dateVerified": "2026-10-01",
+    "status": "verified"
+  },
+
+  "sasbIndustries": [
+    { "sasbSector": "Resource Transformation", "complete": true,
+      "industries": [
+        { "name": "Chemicals", "code": "RT-CH", "workingSector": "manufacturing" },
+        { "name": "Industrial Machinery & Goods", "code": "RT-IG", "workingSector": "manufacturing" },
+        { "name": "Electrical & Electronic Equipment", "code": "RT-EE", "workingSector": "manufacturing" },
+        { "name": "Aerospace & Defense", "code": "RT-AE", "workingSector": "manufacturing" },
+        { "name": "Containers & Packaging", "code": "RT-CP", "workingSector": "manufacturing" }
+      ] },
+    { "sasbSector": "Extractives & Minerals Processing", "complete": true,
+      "industries": [
+        { "name": "Oil & Gas - Exploration & Production", "code": "EM-EP", "workingSector": "energy" },
+        { "name": "Oil & Gas - Midstream", "code": "EM-MD", "workingSector": "energy" },
+        { "name": "Oil & Gas - Refining & Marketing", "code": "EM-RM", "workingSector": "energy" },
+        { "name": "Oil & Gas - Services", "code": "EM-SV", "workingSector": "energy" },
+        { "name": "Coal Operations", "code": "EM-CO", "workingSector": "energy" },
+        { "name": "Iron & Steel Producers", "code": "EM-IS", "workingSector": "energy" },
+        { "name": "Metals & Mining", "code": "EM-MM", "workingSector": "energy" },
+        { "name": "Construction Materials", "code": "EM-CM", "workingSector": "energy" }
+      ] },
+    { "sasbSector": "Infrastructure", "complete": true,
+      "industries": [
+        { "name": "Electric Utilities & Power Generators", "code": "IF-EU", "workingSector": "energy" },
+        { "name": "Gas Utilities & Distributors", "code": "IF-GU", "workingSector": "energy" },
+        { "name": "Water Utilities & Services", "code": "IF-WU", "workingSector": "energy" },
+        { "name": "Waste Management", "code": "IF-WM", "workingSector": "energy" },
+        { "name": "Real Estate", "code": "IF-RE", "workingSector": "realestate" },
+        { "name": "Real Estate Services", "code": "IF-RS", "workingSector": "realestate" },
+        { "name": "Home Builders", "code": "IF-HB", "workingSector": "realestate" },
+        { "name": "Engineering & Construction Services", "code": "IF-EN", "workingSector": "realestate" }
+      ] },
+    { "sasbSector": "Financials", "complete": true,
+      "industries": [
+        { "name": "Commercial Banks", "code": "FN-CB", "workingSector": "financials" },
+        { "name": "Insurance", "code": "FN-IN", "workingSector": "financials" },
+        { "name": "Asset Management & Custody Activities", "code": "FN-AC", "workingSector": "financials" },
+        { "name": "Consumer Finance", "code": "FN-CF", "workingSector": "financials" },
+        { "name": "Investment Banking & Brokerage", "code": "FN-IB", "workingSector": "financials" },
+        { "name": "Mortgage Finance", "code": "FN-MF", "workingSector": "financials" },
+        { "name": "Security & Commodity Exchanges", "code": "FN-EX", "workingSector": "financials" }
+      ] },
+    { "sasbSector": "Technology & Communications", "complete": true,
+      "industries": [
+        { "name": "Software & IT Services", "code": "TC-SI", "workingSector": "software" },
+        { "name": "Hardware", "code": "TC-HW", "workingSector": "software" },
+        { "name": "Semiconductors", "code": "TC-SC", "workingSector": "software" },
+        { "name": "Internet Media & Services", "code": "TC-IM", "workingSector": "software" },
+        { "name": "Telecommunication Services", "code": "TC-TL", "workingSector": "software" },
+        { "name": "Electronic Manufacturing Services & Original Design Manufacturing", "code": "TC-ES", "workingSector": "software" }
+      ] },
+    { "sasbSector": "Consumer Goods", "complete": true,
+      "industries": [
+        { "name": "Apparel, Accessories & Footwear", "code": "CG-AA", "workingSector": "retail" },
+        { "name": "Household & Personal Products", "code": "CG-HP", "workingSector": "retail" },
+        { "name": "Multiline & Specialty Retailers & Distributors", "code": "CG-MR", "workingSector": "retail" },
+        { "name": "Appliance Manufacturing", "code": "CG-AM", "workingSector": "retail" },
+        { "name": "Building Products & Furnishings", "code": "CG-BF", "workingSector": "retail" },
+        { "name": "E-commerce", "code": "CG-EC", "workingSector": "retail" },
+        { "name": "Toys & Sporting Goods", "code": "CG-TO", "workingSector": "retail" }
+      ] },
+    { "sasbSector": "Food & Beverage", "complete": true,
+      "industries": [
+        { "name": "Agricultural Products", "code": "FB-AG", "workingSector": "retail" },
+        { "name": "Alcoholic Beverages", "code": "FB-AB", "workingSector": "retail" },
+        { "name": "Food Retailers & Distributors", "code": "FB-FR", "workingSector": "retail" },
+        { "name": "Meat, Poultry & Dairy", "code": "FB-MP", "workingSector": "retail" },
+        { "name": "Non-Alcoholic Beverages", "code": "FB-NB", "workingSector": "retail" },
+        { "name": "Processed Foods", "code": "FB-PF", "workingSector": "retail" },
+        { "name": "Restaurants", "code": "FB-RN", "workingSector": "retail" },
+        { "name": "Tobacco", "code": "FB-TB", "workingSector": "retail" }
+      ] },
+    { "sasbSector": "Health Care", "complete": true,
+      "industries": [
+        { "name": "Biotechnology & Pharmaceuticals", "code": "HC-BP", "workingSector": "healthcare" },
+        { "name": "Health Care Delivery", "code": "HC-DY", "workingSector": "healthcare" },
+        { "name": "Drug Retailers", "code": "HC-DR", "workingSector": "healthcare" },
+        { "name": "Health Care Distributors", "code": "HC-DI", "workingSector": "healthcare" },
+        { "name": "Managed Care", "code": "HC-MC", "workingSector": "healthcare" },
+        { "name": "Medical Equipment & Supplies", "code": "HC-MS", "workingSector": "healthcare" }
+      ] },
+    { "sasbSector": "Renewable Resources & Alternative Energy", "complete": true,
+      "industries": [
+        { "name": "Biofuels", "code": "RR-BI", "workingSector": "energy" },
+        { "name": "Forestry Management", "code": "RR-FM", "workingSector": "energy" },
+        { "name": "Fuel Cells & Industrial Batteries", "code": "RR-FC", "workingSector": "energy" },
+        { "name": "Pulp & Paper Products", "code": "RR-PP", "workingSector": "manufacturing" },
+        { "name": "Solar Technology & Project Developers", "code": "RR-ST", "workingSector": "energy" },
+        { "name": "Wind Technology & Project Developers", "code": "RR-WT", "workingSector": "energy" }
+      ] },
+    { "sasbSector": "Services", "complete": true,
+      "industries": [
+        { "name": "Advertising & Marketing", "code": "SV-AD", "workingSector": "retail" },
+        { "name": "Casinos & Gaming", "code": "SV-CA", "workingSector": "retail" },
+        { "name": "Education", "code": "SV-ED", "workingSector": "retail" },
+        { "name": "Hotels & Lodging", "code": "SV-HL", "workingSector": "retail" },
+        { "name": "Leisure Facilities", "code": "SV-LF", "workingSector": "retail" },
+        { "name": "Media & Entertainment", "code": "SV-ME", "workingSector": "software" },
+        { "name": "Professional & Commercial Services", "code": "SV-PS", "workingSector": "financials" }
+      ] },
+    { "sasbSector": "Transportation", "complete": true,
+      "industries": [
+        { "name": "Air Freight & Logistics", "code": "TR-AF", "workingSector": "logistics" },
+        { "name": "Marine Transportation", "code": "TR-MT", "workingSector": "logistics" },
+        { "name": "Rail Transportation", "code": "TR-RA", "workingSector": "logistics" },
+        { "name": "Road Transportation", "code": "TR-RO", "workingSector": "logistics" },
+        { "name": "Airlines", "code": "TR-AL", "workingSector": "logistics" },
+        { "name": "Auto Parts", "code": "TR-AP", "workingSector": "logistics" },
+        { "name": "Automobiles", "code": "TR-AU", "workingSector": "logistics" },
+        { "name": "Car Rental & Leasing", "code": "TR-CR", "workingSector": "logistics" },
+        { "name": "Cruise Lines", "code": "TR-CL", "workingSector": "logistics" }
+      ] }
+  ],
+
+  "pillars": [
+    { "id": "E", "name": "Environmental" },
+    { "id": "S", "name": "Social" },
+    { "id": "G", "name": "Governance" }
+  ],
+  "topics": [
+    {
+      "id": "ghg", "pillar": "E", "name": "Climate & GHG Emissions",
+      "relevance": { "manufacturing": 5, "energy": 5, "financials": 3, "software": 2, "retail": 3, "realestate": 4, "healthcare": 2, "logistics": 5 },
+      "questions": [
+        { "id": "ghg-1", "text": "Does the company have a climate policy and a board-level owner for emissions?", "weight": 1, "ref": "ISSB S2 / SASB" },
+        { "id": "ghg-2", "text": "Are Scope 1 and 2 emissions measured, and is Scope 3 assessed for material categories?", "weight": 1.5, "ref": "GHG Protocol" },
+        { "id": "ghg-3", "text": "Are emissions targets set with a baseline year, and progress independently verified?", "weight": 2, "ref": "SBTi criteria" },
+        { "id": "ghg-data", "text": "Report Scope 1 and 2 emissions (tCO2e) for the latest period", "type": "number", "unit": "tCO2e", "scored": false }
+      ]
+    },
+    {
+      "id": "energy", "pillar": "E", "name": "Energy Management",
+      "relevance": { "manufacturing": 4, "energy": 5, "financials": 2, "software": 3, "retail": 3, "realestate": 4, "healthcare": 3, "logistics": 4 },
+      "questions": [
+        { "id": "energy-1", "text": "Is there a policy on energy efficiency and renewable sourcing?", "weight": 1, "ref": "SASB" },
+        { "id": "energy-2", "text": "Is energy consumption measured and tracked by site or business unit?", "weight": 1.5, "ref": "SASB" },
+        { "id": "energy-3", "text": "Are renewable-energy targets time-bound and reported against?", "weight": 2, "ref": "SASB" }
+      ]
+    },
+    {
+      "id": "water-waste", "pillar": "E", "name": "Water, Waste & Circularity",
+      "relevance": { "manufacturing": 4, "energy": 4, "financials": 1, "software": 1, "retail": 3, "realestate": 3, "healthcare": 3, "logistics": 3 },
+      "questions": [
+        { "id": "ww-1", "text": "Is there a policy covering water use, waste and circularity?", "weight": 1, "ref": "GRI 303 / 306" },
+        { "id": "ww-2", "text": "Are water withdrawal, discharge and waste volumes measured?", "weight": 1.5, "ref": "GRI 303 / 306" },
+        { "id": "ww-3", "text": "Are reduction or diversion targets set and tracked?", "weight": 2, "ref": "GRI 306" }
+      ]
+    },
+    {
+      "id": "biodiversity", "pillar": "E", "name": "Biodiversity & Land Use",
+      "relevance": { "manufacturing": 2, "energy": 4, "financials": 1, "software": 1, "retail": 2, "realestate": 3, "healthcare": 1, "logistics": 2 },
+      "questions": [
+        { "id": "bio-1", "text": "Has the company assessed dependencies and impacts on nature at its sites?", "weight": 1, "ref": "TNFD" },
+        { "id": "bio-2", "text": "Are high-biodiversity or protected areas screened before new operations?", "weight": 1.5, "ref": "TNFD" },
+        { "id": "bio-3", "text": "Are nature-related commitments or restoration targets in place?", "weight": 2, "ref": "TNFD" }
+      ]
+    },
+    {
+      "id": "health-safety", "pillar": "S", "name": "Workforce Health & Safety",
+      "relevance": { "manufacturing": 5, "energy": 5, "financials": 1, "software": 1, "retail": 3, "realestate": 4, "healthcare": 3, "logistics": 4 },
+      "questions": [
+        { "id": "hs-1", "text": "Is there a formal health and safety management system?", "weight": 1, "ref": "GRI 403" },
+        { "id": "hs-2", "text": "Are incident rates and near-misses recorded and investigated?", "weight": 1.5, "ref": "GRI 403" },
+        { "id": "hs-3", "text": "Are safety performance targets set and audited by a third party?", "weight": 2, "ref": "GRI 403" },
+        { "id": "hs-data", "text": "Report lost-time injury rate per million hours worked", "type": "number", "unit": "per 1m hrs", "scored": false }
+      ]
+    },
+    {
+      "id": "labour-rights", "pillar": "S", "name": "Labour Practices & Human Rights",
+      "relevance": { "manufacturing": 4, "energy": 3, "financials": 2, "software": 2, "retail": 4, "realestate": 3, "healthcare": 3, "logistics": 3 },
+      "questions": [
+        { "id": "lr-1", "text": "Is there a human rights or labour standards policy aligned to recognised conventions?", "weight": 1, "ref": "UNGP / GRI 407-409" },
+        { "id": "lr-2", "text": "Are supply-chain labour risks assessed beyond tier one?", "weight": 1.5, "ref": "GRI 414" },
+        { "id": "lr-3", "text": "Is there a grievance mechanism and are findings reported?", "weight": 2, "ref": "UNGP" }
+      ]
+    },
+    {
+      "id": "diversity", "pillar": "S", "name": "Diversity, Equity & Talent",
+      "relevance": { "manufacturing": 3, "energy": 3, "financials": 4, "software": 4, "retail": 3, "realestate": 3, "healthcare": 3, "logistics": 3 },
+      "questions": [
+        { "id": "div-1", "text": "Is there a diversity and inclusion policy with named accountability?", "weight": 1, "ref": "GRI 405" },
+        { "id": "div-2", "text": "Is workforce composition measured across levels and pay gaps analysed?", "weight": 1.5, "ref": "GRI 405-406" },
+        { "id": "div-3", "text": "Are representation targets set with reported progress?", "weight": 2, "ref": "GRI 405" }
+      ]
+    },
+    {
+      "id": "product-safety", "pillar": "S", "name": "Product Safety & Quality",
+      "relevance": { "manufacturing": 4, "energy": 3, "financials": 2, "software": 3, "retail": 4, "realestate": 2, "healthcare": 5, "logistics": 2 },
+      "questions": [
+        { "id": "ps-1", "text": "Is there a product quality and safety policy meeting applicable regulation?", "weight": 1, "ref": "SASB" },
+        { "id": "ps-2", "text": "Are recalls, defects and customer complaints tracked?", "weight": 1.5, "ref": "SASB" },
+        { "id": "ps-3", "text": "Is product safety independently certified or audited?", "weight": 2, "ref": "SASB" }
+      ]
+    },
+    {
+      "id": "board-oversight", "pillar": "G", "name": "Board Oversight & ESG Governance",
+      "relevance": { "manufacturing": 4, "energy": 4, "financials": 4, "software": 3, "retail": 3, "realestate": 3, "healthcare": 3, "logistics": 3 },
+      "questions": [
+        { "id": "bo-1", "text": "Does the board have clear accountability for ESG oversight?", "weight": 1, "ref": "ISSB S1 / GRI 2" },
+        { "id": "bo-2", "text": "Is ESG performance linked to executive remuneration?", "weight": 1.5, "ref": "GRI 2-19" },
+        { "id": "bo-3", "text": "Is ESG reporting assured or reviewed externally?", "weight": 2, "ref": "ISSB S1" }
+      ]
+    },
+    {
+      "id": "business-ethics", "pillar": "G", "name": "Business Ethics & Anti-Corruption",
+      "relevance": { "manufacturing": 4, "energy": 4, "financials": 4, "software": 3, "retail": 3, "realestate": 3, "healthcare": 3, "logistics": 3 },
+      "questions": [
+        { "id": "be-1", "text": "Is there a code of conduct and anti-bribery policy?", "weight": 1, "ref": "GRI 205" },
+        { "id": "be-2", "text": "Are employees trained and are third parties screened?", "weight": 1.5, "ref": "GRI 205" },
+        { "id": "be-3", "text": "Is there a confidential whistleblowing channel with reported outcomes?", "weight": 2, "ref": "GRI 2-26" }
+      ]
+    },
+    {
+      "id": "data-privacy", "pillar": "G", "name": "Data Privacy & Cybersecurity",
+      "relevance": { "manufacturing": 3, "energy": 3, "financials": 5, "software": 5, "retail": 4, "realestate": 2, "healthcare": 4, "logistics": 2 },
+      "questions": [
+        { "id": "dp-1", "text": "Is there a data protection and cybersecurity policy?", "weight": 1, "ref": "SASB" },
+        { "id": "dp-2", "text": "Are breaches, incidents and access controls monitored?", "weight": 1.5, "ref": "SASB" },
+        { "id": "dp-3", "text": "Is the control environment independently tested or certified?", "weight": 2, "ref": "SASB / ISO 27001" }
+      ]
+    },
+    {
+      "id": "tax-transparency", "pillar": "G", "name": "Tax & Transparency",
+      "relevance": { "manufacturing": 2, "energy": 3, "financials": 3, "software": 3, "retail": 2, "realestate": 2, "healthcare": 2, "logistics": 2 },
+      "questions": [
+        { "id": "tax-1", "text": "Is there a published tax policy and approach to tax governance?", "weight": 1, "ref": "GRI 207" },
+        { "id": "tax-2", "text": "Is country-by-country tax contribution disclosed?", "weight": 1.5, "ref": "GRI 207-4" },
+        { "id": "tax-3", "text": "Is the tax position reviewed by the audit committee?", "weight": 2, "ref": "GRI 207" }
+      ]
+    }
+  ],
+
+  "topicSources": [
+    { "topicId": "ghg", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Greenhouse Gas Emissions", "industries": ["EM-EP", "IF-EU", "TR-AF", "RT-CH"] },
+      "gri": { "ref": "GRI 305 Emissions" }, "other": ["GHG Protocol Corporate Standard", "ISSB IFRS S2"] },
+    { "topicId": "energy", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Energy Management", "industries": ["IF-EU", "RT-CH", "TR-AF"] },
+      "gri": { "ref": "GRI 302 Energy" }, "other": [] },
+    { "topicId": "water-waste", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Water & Wastewater Management; Waste & Hazardous Materials Management", "industries": ["RT-CH", "EM-MM", "IF-WM"] },
+      "gri": { "ref": "GRI 303 Water & Effluents; GRI 306 Waste" }, "other": [] },
+    { "topicId": "biodiversity", "orientation": "impact", "status": "verified",
+      "sasb": { "topic": "Ecological Impacts", "industries": ["EM-MM", "RR-FM", "IF-RE"] },
+      "gri": { "ref": "GRI 304 Biodiversity" }, "other": ["TNFD Recommendations"] },
+    { "topicId": "health-safety", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Employee Health & Safety", "industries": ["RT-CH", "EM-MM", "TR-RO"] },
+      "gri": { "ref": "GRI 403 Occupational Health & Safety" }, "other": [] },
+    { "topicId": "labour-rights", "orientation": "impact", "status": "verified",
+      "sasb": { "topic": "Labor Practices; Supply Chain Management", "industries": ["CG-AA", "RT-CH"] },
+      "gri": { "ref": "GRI 407 Freedom of Association; GRI 408 Child Labor; GRI 409 Forced Labor; GRI 414 Supplier Social Assessment" },
+      "other": ["UN Guiding Principles on Business & Human Rights"] },
+    { "topicId": "diversity", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Employee Engagement, Diversity & Inclusion", "industries": ["FN-CB", "TC-SI", "SV-PS"] },
+      "gri": { "ref": "GRI 405 Diversity & Equal Opportunity; GRI 406 Non-discrimination" }, "other": [] },
+    { "topicId": "product-safety", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Product Quality & Safety", "industries": ["HC-BP", "CG-AA", "RT-IG"] },
+      "gri": { "ref": "GRI 416 Customer Health & Safety; GRI 417 Marketing & Labelling" }, "other": [] },
+    { "topicId": "board-oversight", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "No standalone SASB topic; sits under governance disclosure", "industries": [] },
+      "gri": { "ref": "GRI 2-9 to 2-21 Governance" }, "other": ["ISSB IFRS S1 governance disclosures"] },
+    { "topicId": "business-ethics", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Business Ethics", "industries": ["FN-CB", "EM-EP", "RT-CH"] },
+      "gri": { "ref": "GRI 205 Anti-corruption; GRI 206 Anti-competitive Behavior" }, "other": [] },
+    { "topicId": "data-privacy", "orientation": "financial", "status": "verified",
+      "sasb": { "topic": "Data Security; Customer Privacy", "industries": ["FN-CB", "TC-SI", "HC-DY"] },
+      "gri": { "ref": "GRI 418 Customer Privacy" }, "other": ["ISO/IEC 27001"] },
+    { "topicId": "tax-transparency", "orientation": "impact", "status": "verified",
+      "sasb": { "topic": "No standalone SASB topic", "industries": [] },
+      "gri": { "ref": "GRI 207 Tax" }, "other": [] }
+  ]
+}
