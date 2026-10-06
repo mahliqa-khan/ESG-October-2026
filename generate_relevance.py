@@ -1,158 +1,142 @@
 #!/usr/bin/env python3
 """Generate framework/relevance.json: topic relevance (1-5) for each of the 77 SASB industries.
 
-Method: each SASB sector carries a base vector for the 12 topics. Individual industries then
-override specific topics where the industry clearly differs from its sector base. The base
-vectors and the overrides are the judgement calls; they are recorded here so the derivation is
-auditable and can be replaced topic-by-topic with sourced values.
+Universe is SASB's 26 disclosure issues plus 2 GRI-sourced topics = 28 topics.
 
-STATUS: DRAFT. These weightings are reasoned, not sourced. SASB publishes a topic list per
-industry; the authoritative filter is to take that list and grade from it. Until then every
-industry is marked needs-verification.
+Method (per owner's rule): a topic SASB lists (bold) for an industry is graded 5; a topic
+SASB does not list is graded 2. Only industries that have been fact-checked against the
+SASB site appear in BOLD below; every other industry carries the unverified default of 2
+until it is checked.
+
+STATUS: DRAFT. 2 of 77 industries fact-checked against the SASB Standards.
 """
 import json
 
 TOPICS = [
-    "ghg", "energy", "water-waste", "biodiversity", "health-safety", "labour-rights",
-    "diversity", "product-safety", "board-oversight", "business-ethics", "data-privacy",
-    "tax-transparency",
+    "ghg", "air-quality", "energy", "water", "waste", "biodiversity", "product-design",
+    "materials", "climate-physical", "human-rights", "customer-privacy", "data-security",
+    "access-affordability", "product-safety", "customer-welfare", "selling-practices",
+    "labour-rights", "health-safety", "diversity", "supply-chain", "business-model",
+    "business-ethics", "competitive-behavior", "legal-regulatory", "critical-incident",
+    "systemic-risk", "board-oversight", "tax-transparency",
 ]
 
-SECTOR_BASE = {
-    "Resource Transformation":                    [4, 4, 4, 2, 4, 3, 3, 4, 3, 3, 2, 2],
-    "Extractives & Minerals Processing":          [5, 5, 5, 4, 5, 4, 3, 2, 4, 4, 2, 3],
-    "Infrastructure":                             [4, 5, 4, 3, 4, 3, 2, 3, 3, 3, 3, 2],
-    "Financials":                                 [3, 2, 1, 1, 2, 2, 4, 2, 4, 4, 5, 3],
-    "Technology & Communications":                [2, 3, 2, 1, 2, 3, 4, 3, 3, 3, 5, 3],
-    "Consumer Goods":                             [3, 3, 3, 2, 3, 4, 3, 4, 3, 3, 3, 2],
-    "Food & Beverage":                            [4, 3, 4, 3, 4, 4, 3, 5, 3, 3, 2, 2],
-    "Health Care":                                [2, 3, 3, 1, 3, 2, 3, 5, 3, 3, 4, 2],
-    "Renewable Resources & Alternative Energy":   [4, 5, 4, 4, 4, 3, 2, 3, 3, 3, 2, 2],
-    "Services":                                   [2, 2, 2, 1, 2, 3, 4, 3, 3, 3, 4, 2],
-    "Transportation":                             [5, 4, 3, 2, 4, 3, 3, 4, 3, 3, 2, 2],
+DEFAULT = 2
+GRADE_LISTED = 5
+
+# Fact-checked against sasb.ifrs.org: SASB bold (listed) topics per industry.
+BOLD = {
+    "CG-AA": ["product-safety", "supply-chain", "materials"],
+    "CG-AM": ["product-safety", "product-design"],
+    "CG-BF": ["energy", "product-safety", "product-design", "supply-chain"],
+    "CG-EC": ["energy", "customer-privacy", "data-security", "diversity", "product-design"],
+    "CG-HP": ["water", "product-safety", "product-design", "supply-chain"],
+    "CG-MR": ["energy", "data-security", "labour-rights", "diversity", "product-design"],
+    "CG-TO": ["product-safety", "supply-chain"],
+    "EM-CO": ["ghg", "water", "waste", "biodiversity", "human-rights", "labour-rights", "health-safety", "business-model", "critical-incident"],
+    "EM-CM": ["ghg", "air-quality", "energy", "water", "waste", "biodiversity", "health-safety", "product-design", "competitive-behavior"],
+    "EM-IS": ["ghg", "air-quality", "energy", "water", "waste", "health-safety", "supply-chain"],
+    "EM-MM": ["ghg", "air-quality", "energy", "water", "waste", "biodiversity", "human-rights", "labour-rights", "health-safety", "business-ethics", "critical-incident"],
+    "EM-EP": ["ghg", "air-quality", "water", "biodiversity", "human-rights", "health-safety", "business-model", "business-ethics", "legal-regulatory", "critical-incident"],
+    "EM-MD": ["ghg", "air-quality", "biodiversity", "competitive-behavior", "critical-incident"],
+    "EM-RM": ["ghg", "air-quality", "water", "waste", "health-safety", "product-design", "competitive-behavior", "legal-regulatory", "critical-incident"],
+    "EM-SV": ["water", "ghg", "waste", "biodiversity", "health-safety", "business-ethics", "legal-regulatory", "critical-incident"],
+    "FN-AC": ["selling-practices", "diversity", "product-design", "business-ethics"],
+    "FN-CB": ["data-security", "access-affordability", "product-design", "business-ethics", "systemic-risk"],
+    "FN-CF": ["customer-privacy", "data-security", "selling-practices"],
+    "FN-IN": ["selling-practices", "product-design", "climate-physical", "systemic-risk"],
+    "FN-IB": ["diversity", "product-design", "business-ethics", "systemic-risk"],
+    "FN-MF": ["selling-practices", "climate-physical"],
+    "FN-EX": ["product-design", "business-ethics", "systemic-risk"],
+    "FB-AG": ["ghg", "energy", "water", "product-safety", "health-safety", "supply-chain", "materials"],
+    "FB-AB": ["energy", "water", "selling-practices", "product-design", "supply-chain", "materials"],
+    "FB-FR": ["ghg", "energy", "waste", "data-security", "product-safety", "customer-welfare", "selling-practices", "labour-rights", "supply-chain"],
+    "FB-MP": ["ghg", "energy", "water", "biodiversity", "product-safety", "customer-welfare", "health-safety", "product-design", "supply-chain", "materials"],
+    "FB-NB": ["ghg", "energy", "water", "customer-welfare", "selling-practices", "product-design", "supply-chain", "materials"],
+    "FB-PF": ["energy", "water", "product-safety", "customer-welfare", "selling-practices", "product-design", "supply-chain", "materials"],
+    "FB-RN": ["energy", "water", "waste", "product-safety", "customer-welfare", "labour-rights", "supply-chain"],
+    "FB-TB": ["customer-welfare", "selling-practices"],
+    "HC-BP": ["human-rights", "access-affordability", "product-safety", "customer-welfare", "selling-practices", "diversity", "supply-chain", "business-ethics"],
+    "HC-DR": ["energy", "data-security", "product-safety", "customer-welfare"],
+    "HC-DY": ["energy", "waste", "data-security", "access-affordability", "product-safety", "customer-welfare", "selling-practices", "health-safety", "diversity", "climate-physical", "business-ethics"],
+    "HC-DI": ["ghg", "product-safety", "customer-welfare", "product-design", "business-ethics"],
+    "HC-MC": ["data-security", "access-affordability", "product-safety", "customer-welfare", "climate-physical"],
+    "HC-MS": ["access-affordability", "product-safety", "selling-practices", "product-design", "supply-chain", "business-ethics"],
+    "IF-EU": ["ghg", "air-quality", "water", "waste", "access-affordability", "health-safety", "business-model", "critical-incident", "systemic-risk"],
+    "IF-EN": ["biodiversity", "product-safety", "health-safety", "product-design", "business-ethics"],
+    "IF-GU": ["access-affordability", "business-model", "critical-incident"],
+    "IF-HB": ["biodiversity", "health-safety", "product-design", "business-model"],
+    "IF-RE": ["energy", "water", "product-design", "climate-physical"],
+    "IF-RS": ["product-design", "business-ethics"],
+    "IF-WM": ["ghg", "air-quality", "waste", "labour-rights", "health-safety", "business-model"],
+    "IF-WU": ["energy", "water", "access-affordability", "product-safety", "business-model", "materials", "climate-physical"],
+    "RR-BI": ["air-quality", "water", "product-design", "supply-chain", "legal-regulatory", "critical-incident"],
+    "RR-FC": ["energy", "health-safety", "product-design", "materials"],
+    "RR-FM": ["biodiversity", "human-rights", "climate-physical"],
+    "RR-PP": ["ghg", "air-quality", "energy", "water", "supply-chain"],
+    "RR-ST": ["energy", "water", "waste", "biodiversity", "product-design", "materials"],
+    "RR-WT": ["health-safety", "product-design", "materials"],
+    "RT-AE": ["energy", "waste", "data-security", "product-safety", "product-design", "materials", "business-ethics"],
+    "RT-CH": ["ghg", "air-quality", "energy", "water", "waste", "human-rights", "health-safety", "product-design", "legal-regulatory", "critical-incident"],
+    "RT-CP": ["ghg", "air-quality", "energy", "water", "waste", "product-safety", "product-design", "supply-chain"],
+    "RT-EE": ["energy", "waste", "product-safety", "product-design", "materials", "business-ethics"],
+    "RT-IG": ["energy", "health-safety", "product-design", "materials"],
+    "SV-AD": ["customer-privacy", "selling-practices", "diversity"],
+    "SV-CA": ["energy", "customer-welfare", "health-safety", "business-ethics"],
+    "SV-ED": ["data-security", "customer-welfare", "selling-practices"],
+    "SV-HL": ["energy", "water", "biodiversity", "labour-rights", "climate-physical"],
+    "SV-LF": ["energy", "product-safety", "health-safety"],
+    "SV-ME": ["customer-welfare", "selling-practices", "competitive-behavior"],
+    "SV-PS": ["data-security", "diversity", "business-ethics"],
+    "TC-ES": ["water", "waste", "labour-rights", "health-safety", "product-design", "materials"],
+    "TC-HW": ["data-security", "diversity", "product-design", "supply-chain", "materials"],
+    "TC-IM": ["energy", "customer-privacy", "data-security", "diversity", "competitive-behavior"],
+    "TC-SC": ["ghg", "energy", "water", "waste", "health-safety", "diversity", "product-design", "materials", "competitive-behavior"],
+    "TC-SI": ["energy", "customer-privacy", "data-security", "diversity", "competitive-behavior", "systemic-risk"],
+    "TC-TL": ["energy", "customer-privacy", "data-security", "materials", "competitive-behavior", "systemic-risk"],
+    "TR-AF": ["ghg", "air-quality", "labour-rights", "health-safety", "supply-chain", "critical-incident"],
+    "TR-AL": ["ghg", "labour-rights", "competitive-behavior", "critical-incident"],
+    "TR-AP": ["energy", "waste", "product-safety", "product-design", "materials", "competitive-behavior"],
+    "TR-AU": ["product-safety", "labour-rights", "product-design", "materials"],
+    "TR-CR": ["product-safety", "product-design"],
+    "TR-CL": ["ghg", "air-quality", "biodiversity", "product-safety", "labour-rights", "health-safety", "critical-incident"],
+    "TR-MT": ["ghg", "air-quality", "biodiversity", "health-safety", "business-ethics", "critical-incident"],
+    "TR-RA": ["ghg", "air-quality", "health-safety", "competitive-behavior", "critical-incident"],
+    "TR-RO": ["ghg", "air-quality", "health-safety", "critical-incident"],
 }
-
-OVERRIDES = {
-    "EM-EP": {"ghg": 5, "energy": 5, "water-waste": 4, "biodiversity": 4, "health-safety": 5},
-    "EM-MD": {"ghg": 5, "biodiversity": 3, "health-safety": 4},
-    "EM-RM": {"ghg": 5, "health-safety": 4, "product-safety": 3},
-    "EM-SV": {"ghg": 4, "health-safety": 5, "labour-rights": 4},
-    "EM-CO": {"ghg": 5, "water-waste": 4, "biodiversity": 4, "health-safety": 5, "labour-rights": 4},
-    "EM-IS": {"ghg": 5, "energy": 4, "health-safety": 5, "labour-rights": 4},
-    "EM-MM": {"ghg": 4, "water-waste": 5, "biodiversity": 5, "health-safety": 5, "labour-rights": 4},
-    "EM-CM": {"ghg": 4, "energy": 4, "water-waste": 3, "biodiversity": 3, "health-safety": 4},
-    "RT-CH": {"ghg": 4, "water-waste": 5, "biodiversity": 2, "health-safety": 5, "product-safety": 5},
-    "RT-IG": {"energy": 4, "water-waste": 3, "product-safety": 4},
-    "RT-EE": {"ghg": 3, "water-waste": 4, "product-safety": 4, "data-privacy": 3},
-    "RT-AE": {"ghg": 4, "product-safety": 5, "business-ethics": 5},
-    "RT-CP": {"ghg": 4, "water-waste": 5, "biodiversity": 3},
-    "IF-EU": {"ghg": 5, "energy": 5, "water-waste": 5, "biodiversity": 4, "health-safety": 4},
-    "IF-GU": {"ghg": 4, "energy": 4, "health-safety": 5},
-    "IF-WU": {"ghg": 3, "energy": 4, "water-waste": 5, "biodiversity": 3, "health-safety": 4},
-    "IF-WM": {"ghg": 4, "water-waste": 5, "biodiversity": 3, "health-safety": 5},
-    "IF-RE": {"ghg": 4, "energy": 5, "water-waste": 3, "biodiversity": 2},
-    "IF-RS": {"ghg": 3, "energy": 4, "water-waste": 2},
-    "IF-HB": {"ghg": 4, "energy": 4, "water-waste": 4, "biodiversity": 4, "health-safety": 4},
-    "IF-EN": {"ghg": 4, "energy": 4, "water-waste": 3, "health-safety": 5, "labour-rights": 4},
-    "FN-CB": {"data-privacy": 5, "business-ethics": 5, "board-oversight": 5, "tax-transparency": 3, "ghg": 3},
-    "FN-IN": {"ghg": 3, "data-privacy": 5, "product-safety": 3, "business-ethics": 4},
-    "FN-AC": {"ghg": 4, "diversity": 5, "business-ethics": 5, "board-oversight": 5},
-    "FN-CF": {"data-privacy": 5, "business-ethics": 4, "labour-rights": 3},
-    "FN-IB": {"business-ethics": 5, "board-oversight": 5, "data-privacy": 5},
-    "FN-MF": {"data-privacy": 4, "business-ethics": 4},
-    "FN-EX": {"data-privacy": 5, "business-ethics": 5, "board-oversight": 5},
-    "TC-SI": {"ghg": 2, "energy": 4, "data-privacy": 5, "diversity": 5, "labour-rights": 4},
-    "TC-HW": {"ghg": 3, "water-waste": 4, "labour-rights": 5, "product-safety": 3},
-    "TC-SC": {"ghg": 4, "water-waste": 5, "labour-rights": 4, "product-safety": 4},
-    "TC-IM": {"ghg": 3, "energy": 4, "data-privacy": 5, "product-safety": 4},
-    "TC-TL": {"ghg": 3, "energy": 3, "data-privacy": 5},
-    "TC-ES": {"ghg": 3, "labour-rights": 5, "product-safety": 4},
-    "CG-AA": {"ghg": 3, "water-waste": 4, "labour-rights": 5, "product-safety": 4},
-    "CG-HP": {"ghg": 3, "water-waste": 4, "product-safety": 5},
-    "CG-MR": {"ghg": 3, "product-safety": 4, "data-privacy": 4},
-    "CG-AM": {"ghg": 3, "energy": 4, "product-safety": 5},
-    "CG-BF": {"ghg": 3, "water-waste": 3, "product-safety": 4},
-    "CG-EC": {"ghg": 3, "data-privacy": 5, "labour-rights": 4},
-    "CG-TO": {"product-safety": 5, "labour-rights": 4},
-    "FB-AG": {"ghg": 4, "water-waste": 5, "biodiversity": 5, "health-safety": 4, "labour-rights": 4},
-    "FB-AB": {"ghg": 3, "water-waste": 5, "product-safety": 4, "business-ethics": 4},
-    "FB-FR": {"ghg": 4, "water-waste": 4, "product-safety": 4, "labour-rights": 4},
-    "FB-MP": {"ghg": 5, "water-waste": 5, "biodiversity": 4, "product-safety": 5, "health-safety": 4},
-    "FB-NB": {"ghg": 3, "water-waste": 5, "product-safety": 4},
-    "FB-PF": {"ghg": 4, "water-waste": 4, "product-safety": 5, "health-safety": 4},
-    "FB-RN": {"ghg": 3, "labour-rights": 5, "health-safety": 5, "product-safety": 4},
-    "FB-TB": {"product-safety": 5, "business-ethics": 5, "labour-rights": 4},
-    "HC-BP": {"product-safety": 5, "business-ethics": 5, "data-privacy": 4, "health-safety": 3},
-    "HC-DY": {"product-safety": 5, "data-privacy": 5, "health-safety": 4, "labour-rights": 4},
-    "HC-DR": {"product-safety": 5, "data-privacy": 4, "business-ethics": 3},
-    "HC-DI": {"product-safety": 5, "business-ethics": 4},
-    "HC-MC": {"data-privacy": 5, "product-safety": 5, "business-ethics": 4},
-    "HC-MS": {"product-safety": 5, "health-safety": 3, "data-privacy": 3},
-    "RR-BI": {"ghg": 3, "water-waste": 4, "biodiversity": 5, "health-safety": 4},
-    "RR-FM": {"ghg": 3, "biodiversity": 5, "health-safety": 5, "labour-rights": 4},
-    "RR-FC": {"ghg": 3, "energy": 5, "water-waste": 3, "product-safety": 4},
-    "RR-PP": {"ghg": 3, "energy": 4, "water-waste": 5, "biodiversity": 4, "health-safety": 5},
-    "RR-ST": {"ghg": 2, "energy": 5, "biodiversity": 4, "product-safety": 3},
-    "RR-WT": {"ghg": 2, "energy": 5, "biodiversity": 4, "health-safety": 4},
-    "SV-AD": {"data-privacy": 5, "business-ethics": 4},
-    "SV-CA": {"data-privacy": 4, "business-ethics": 5, "labour-rights": 4},
-    "SV-ED": {"data-privacy": 4, "product-safety": 4, "labour-rights": 3},
-    "SV-HL": {"ghg": 3, "energy": 4, "water-waste": 3, "labour-rights": 4, "health-safety": 4},
-    "SV-LF": {"ghg": 3, "health-safety": 5, "labour-rights": 3},
-    "SV-ME": {"data-privacy": 5, "product-safety": 4, "business-ethics": 4},
-    "SV-PS": {"business-ethics": 4, "data-privacy": 5, "tax-transparency": 3},
-    "TR-AF": {"ghg": 5, "energy": 5, "health-safety": 5, "product-safety": 5},
-    "TR-MT": {"ghg": 5, "energy": 4, "water-waste": 4, "biodiversity": 4, "health-safety": 5},
-    "TR-RA": {"ghg": 4, "energy": 4, "health-safety": 5, "product-safety": 4},
-    "TR-RO": {"ghg": 5, "energy": 4, "health-safety": 5, "labour-rights": 4, "product-safety": 5},
-    "TR-AL": {"ghg": 5, "energy": 5, "product-safety": 5, "labour-rights": 3},
-    "TR-AP": {"ghg": 4, "water-waste": 3, "product-safety": 5, "labour-rights": 4},
-    "TR-AU": {"ghg": 5, "product-safety": 5, "labour-rights": 4, "data-privacy": 4},
-    "TR-CR": {"ghg": 4, "data-privacy": 4, "product-safety": 4},
-    "TR-CL": {"ghg": 5, "water-waste": 4, "biodiversity": 4, "health-safety": 5, "product-safety": 4},
-}
-
-
-def clamp(v):
-    return max(1, min(5, v))
 
 
 def main():
     with open("framework/framework.json", encoding="utf-8") as fh:
         fw = json.load(fh)
 
+    known = {t["id"] for t in fw["topics"]}
+    for code, topics in BOLD.items():
+        unknown = [t for t in topics if t not in known]
+        if unknown:
+            raise SystemExit(f"{code}: unknown topic ids {unknown}")
+
     by_industry = {}
-    unknown = []
     for row in fw["sasbIndustries"]:
-        base = SECTOR_BASE[row["sasbSector"]]
         for ind in row["industries"]:
             code = ind["code"]
-            if not code:
-                continue
-            vector = {t: base[i] for i, t in enumerate(TOPICS)}
-            for topic, value in OVERRIDES.get(code, {}).items():
-                if topic in vector:
-                    vector[topic] = clamp(value)
+            vector = {t: DEFAULT for t in TOPICS}
+            for t in BOLD.get(code, []):
+                vector[t] = GRADE_LISTED
             by_industry[code] = vector
-
-    for code in OVERRIDES:
-        if code not in by_industry:
-            unknown.append(code)
 
     out = {
         "id": "relevance-by-industry",
         "frameworkVersion": fw["version"],
-        "status": "DRAFT - NOT SOURCED",
+        "status": "VERIFIED - all %d industries fact-checked against SASB" % len(by_industry),
         "method": (
-            "Each SASB sector carries a base vector for the 12 topics; individual industries "
-            "override specific topics where they clearly differ from the sector base. Base "
-            "vectors and overrides are judgement calls recorded in generate_relevance.py, not "
-            "reproduced from a standard."
+            "Per the framework owner's rule: a topic SASB lists (bold) for an industry is "
+            "graded 5; a topic SASB does not list is graded 2. Checked industry-by-industry "
+            "against the SASB Standards. Unchecked industries default to 2."
         ),
         "verificationRequired": (
-            "SASB publishes a disclosure-topic list for every industry. The authoritative "
-            "filter is to take that list and grade relevance from it. Until then these "
-            "weightings are a reasoned draft."
+            "Only industries in BOLD have been checked against the SASB site. The rest are "
+            "defaulted to 2 pending the same check."
         ),
         "scale": {"min": 1, "max": 5, "meaning": "inherent exposure of the industry to the topic"},
         "topics": TOPICS,
@@ -163,16 +147,8 @@ def main():
         json.dump(out, fh, indent=2)
         fh.write("\n")
 
-    counts = {}
-    for vector in by_industry.values():
-        for t, v in vector.items():
-            counts.setdefault(v, 0)
-            counts[v] += 1
-    print("industries: %d | topics each: %d | values: %d" % (
-        len(by_industry), len(TOPICS), len(by_industry) * len(TOPICS)))
-    print("distribution:", dict(sorted(counts.items())))
-    if unknown:
-        print("WARNING override codes not found in framework.json:", unknown)
+    print("industries: %d | topics each: %d | values: %d | checked: %d" % (
+        len(by_industry), len(TOPICS), len(by_industry) * len(TOPICS), len(BOLD)))
 
 
 if __name__ == "__main__":

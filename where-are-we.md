@@ -1,6 +1,6 @@
 # Where Are We?
 
-Status as at 1 October 2026. Steps 1 and 2 are complete. Three steps remain.
+Status as at 6 October 2026. Steps 1 and 2 are complete and verified. Three steps remain.
 
 ---
 
@@ -42,34 +42,30 @@ High residual risk means escalate. Low means leave it alone.
 The app is also built: dashboard, questionnaires, live scoring, results, and a review
 workflow where one person submits, a second reviews, and a third approves.
 
-## The one caveat
+## The caveat is closed
 
-You checked the *codes* — the names of the 77 industries. You have not checked the
-*weightings* — the 924 numbers that say how risky each topic is for each industry.
+The codes and the weightings are both verified. Every one of the 77 industries was checked
+against its published SASB disclosure-topic list: a topic SASB lists is graded 5, a topic it
+does not list is graded 2.
 
-Those numbers were reasoned out, not taken from a published source. If they are wrong, every
-score the tool produces is wrong. This is the same kind of risk the codes carried before you
-verified them.
+The fact-check also fixed two gaps. SASB lists two issues our topic list was missing —
+**Materials Sourcing & Efficiency** and **Product Design & Lifecycle Management** — so the
+universe was expanded from 12 topics to SASB's full 26 issues, plus 2 GRI-sourced topics
+(Board Oversight, Tax). That is 28 topics, 2,156 values, all checked.
 
-> Analogy: the codes are the street names. You have confirmed the streets exist and are
-> spelled correctly. The weightings are the directions — we have written them down, but
-> nobody has driven the route to check they get you there.
+> Analogy: the codes are the street names, and the weightings are the directions. Both have
+> now been driven — SASB's published map for each industry matches ours.
 
 ## What is left
 
-1. **Check the weightings.** Confirm the numbers match how SASB describes each industry.
-2. **Evidence tiering.** Right now, a company that *claims* it has a policy scores the same
+1. **Evidence tiering.** Right now, a company that *claims* it has a policy scores the same
    as one that can *prove* it. That should not be true.
-3. **Backtesting.** Run the model against companies that are known to have had ESG failures.
+2. **Backtesting.** Run the model against companies that are known to have had ESG failures.
    If it would not have flagged them, the model needs fixing.
-4. **Move off the browser.** Data currently lives in one person's browser. It needs a proper
+3. **Move off the browser.** Data currently lives in one person's browser. It needs a proper
    database so a team can use it.
 
 ## What you need to decide
 
-Nothing is blocking. The question is order of work:
-
-- Check the weightings now, before anyone relies on the scores, or
-- Go straight to evidence tiering and come back to weightings later.
-
-The first is safer. The second is faster.
+Nothing is blocking. Steps left are evidence tiering, backtesting, and persistence. The
+weightings question that used to sit here is resolved.

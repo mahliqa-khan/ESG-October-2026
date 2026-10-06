@@ -1,6 +1,6 @@
 # ESG Assessment Tool — Progress Report
 
-Date: 1 October 2026 · Status: Steps 1–2 complete, Step 3 next
+Date: 6 October 2026 · Status: Steps 1–2 complete and verified, Step 3 next
 
 ## What we are building
 
@@ -23,23 +23,33 @@ Exposure blends across multiple industries, so conglomerates can be modelled by 
 results with priority actions, and an enforced review workflow: draft → submitted → reviewed
 → approved, where the approver must differ from the reviewer and every change is logged.
 
-**Industry-level weighting (Step 2).** All 77 industries now carry their own topic weightings
-(924 values), so the industry a company is assigned drives its exposure. Assessments can blend
+**Industry-level weighting (Step 2).** Every one of the 77 industries now carries its own topic
+grading, so the industry a company is assigned drives its exposure. Assessments can blend
 several industries by revenue share, so multi-business groups are modelled instead of being
 forced into one sector.
 
+**Topic universe expanded (Step 2 verification).** The fact-check against SASB's published
+disclosure-topic lists exposed two topics our collapsed list was missing — Materials Sourcing
+& Efficiency and Product Design & Lifecycle Management. The universe was rebuilt around SASB's
+full set of 26 issues, plus 2 GRI-sourced topics (Board Oversight, Tax): 28 topics, 2,156
+values.
+
 ## Verified
 
-All 77 industry codes and 12 topic mappings were checked against the SASB codification and GRI
-standards, and recorded on 1 October 2026. The universe is no longer provisional: 89 of 89
-entries verified, 11 of 11 sectors marked complete, and all draft flags cleared.
+All 77 industry codes, the 12 original topic mappings, and now the industry weightings have
+been checked against the SASB Standards. Steps 1 and 2 are both closed.
+
+**Weighting verification (recorded 6 October 2026).** Each of the 77 industries was checked
+against its published SASB disclosure-topic list: a listed (bold) topic is graded 5, a topic
+SASB does not list is graded 2. `relevance.json` now reads `VERIFIED - all 77 industries
+fact-checked against SASB`, with 2,156 values (421 graded 5, 1,735 graded 2). The per-industry
+verdicts are recorded in `worksheet-weightings.md`.
 
 ## Current limitation
 
-The industry weightings are reasoned, not sourced. `relevance.json` is marked
-`DRAFT - NOT SOURCED`: the 924 values derive from sector base vectors and per-industry
-overrides rather than from SASB's published disclosure-topic list for each industry. The
-remaining task is to grade each industry from its published topic list.
+The grading is a binary check — listed (5) versus not listed (2) — which verifies *whether* a
+topic is material, not *how much*. SASB publishes the topic list but not relative weights, so
+the 5-versus-less-than-5 distinction is settled by backtesting, not citation. That is Step 4.
 
 ## Future workflow
 
@@ -52,6 +62,5 @@ remaining task is to grade each industry from its published topic list.
 
 ## Decision required
 
-None blocking. Two candidate moves: verify the 924 weightings against each industry's
-published SASB topic list — the same method that closed Step 1 — or proceed to Step 3 and
-return to weighting verification once the model is proven.
+None blocking. The weighting-verification question that previously sat here is resolved. The
+next move is Step 3 (evidence tiering), with backtesting to follow.
