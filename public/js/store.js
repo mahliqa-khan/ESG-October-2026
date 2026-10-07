@@ -110,14 +110,32 @@ export function updateAssessment(id, patch, action, detail) {
 export function setAnswer(id, questionId, value) {
   const a = getAssessment(id);
   if (!a) return null;
-  const previous = a.answers[questionId];
-  a.answers[questionId] = value;
+  const prev = asAnswer(a.answers[questionId]);
+  a.answers[questionId] = { ...prev, value };
   a.updatedAt = new Date().toISOString();
-  if (String(previous) !== String(value)) {
-    log(a, "answer", `${questionId}: ${previous === undefined ? "blank" : previous} -> ${value}`);
+  if (String(prev.value) !== String(value)) {
+    log(a, "answer", `${questionId}: ${prev.value === undefined ? "blank" : prev.value} -> ${value}`);
   }
   persist();
   return a;
+}
+
+export function setEvidence(id, questionId, evidence, source) {
+  const a = getAssessment(id);
+  if (!a) return null;
+  const prev = asAnswer(a.answers[questionId]);
+  a.answers[questionId] = { ...prev, evidence, source };
+  a.updatedAt = new Date().toISOString();
+  log(a, "evidence", `${questionId}: ${evidence}${source ? " (" + source + ")" : ""}`);
+  persist();
+  return a;
+}
+
+function asAnswer(prev) {
+  if (prev && typeof prev === "object") {
+    return { value: prev.value, evidence: prev.evidence, source: prev.source };
+  }
+  return { value: prev };
 }
 
 export function setNote(id, topicId, text) {

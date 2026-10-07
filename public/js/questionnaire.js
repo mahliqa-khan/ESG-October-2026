@@ -1,23 +1,39 @@
-import { state, setAnswer, setNote, getAssessment, navigate } from "./store.js";
-import { assessmentResult, scaleFor, exposureOf } from "./scoring.js";
+import { state, setAnswer, setEvidence, setNote, getAssessment, navigate } from "./store.js";
+import { assessmentResult, scaleFor, exposureOf, answerParts, evidenceTiers } from "./scoring.js";
 import { esc, STATUS_LABEL, unitLabel } from "./ui.js";
 import { barRow, bandColor, legend } from "./dashboard.js";
 
-function questionControl(q, value, framework) {
+function questionControl(q, answer, framework, readOnly) {
+  const { value, evidence, source } = answerParts(answer);
   if (q.type === "number") {
     return `<input type="number" step="any" data-q="${q.id}" value="${esc(value)}"
       placeholder="value" /> <span class="muted">${esc(q.unit || "")}</span>`;
   }
   const scale = scaleFor(q, framework);
   const opts = scale
-    .map((o, i) => {
+    .map((o) => {
       const checked = String(value) === String(o.score) ? "checked" : "";
       return `<label class="opt"><input type="radio" name="${q.id}" data-q="${q.id}"
         value="${o.score}" ${checked} /><span class="opt-score">${o.score}</span>
         <span class="opt-label">${esc(o.label)}</span></label>`;
     })
     .join("");
-  return `<div class="opts">${opts}</div>`;
+  const tiers = evidenceTiers(framework);
+  const tierOpts = tiers
+    .map((t) => {
+      const sel = (evidence || (framework.evidenceTiers && framework.evidenceTiers.default)) === t.id
+        ? "selected" : "";
+      return `<option value="${t.id}" ${sel}>${esc(t.label)}</option>`;
+    })
+    .join("");
+  const evidenceRow = tiers.length
+    ? `<div class="evidence-row">
+        <select data-evidence="${q.id}" ${readOnly ? "disabled" : ""}>${tierOpts}</select>
+        <input type="text" data-source="${q.id}" value="${esc(source)}"
+          placeholder="source (e.g. Annual Report 2025, p.42)" ${readOnly ? "readonly" : ""} />
+      </div>`
+    : "";
+  return `<div class="opts">${opts}</div>${evidenceRow}`;
 }
 
 function topicBlock(topic, assessment, framework, readOnly) {
@@ -25,7 +41,7 @@ function topicBlock(topic, assessment, framework, readOnly) {
   const result = assessmentResult(assessment, framework).results.find((r) => r.topicId === topic.id);
   const questions = topic.questions
     .map((q) => {
-      const value = assessment.answers[q.id];
+      const answer = assessment.answers[q.id];
       const meta = [
         q.ref ? `<span class="tag">${esc(q.ref)}</span>` : "",
         q.scored === false ? `<span class="tag alt">data only</span>` : "",
@@ -35,7 +51,7 @@ function topicBlock(topic, assessment, framework, readOnly) {
       return `
         <div class="question" data-question="${q.id}">
           <div class="q-text">${esc(q.text)} ${meta}</div>
-          <div class="q-control" ${readOnly ? 'data-readonly="1"' : ""}>${questionControl(q, value, framework)}</div>
+          <div class="q-control" ${readOnly ? 'data-readonly="1"' : ""}>${questionControl(q, answer, framework, readOnly)}</div>
         </div>`;
     })
     .join("");
@@ -139,6 +155,22 @@ export function bindQuestionnaire(root, id) {
     input.addEventListener("change", () => {
       setAnswer(id, input.dataset.q, input.value);
       rerenderScores(root, id);
+    });
+  });
+  root.querySelectorAll("[data-evidence]").forEach((sel) => {
+    sel.addEventListener("change", () => {
+      const src = root.querySelector(`[data-source="${sel.dataset.evidence}"]`);
+      setEvidence(id, sel.dataset.evidence, sel.value, src ? src.value.trim() : "");
+      rerenderScores(root, id);
+    });
+  });
+  root.querySelectorAll("[data-source]").forEach((inp) => {
+    inp.addEventListener("change", () => {
+      const sel = root.querySelector(`[data-evidence="${inp.dataset.source}"]`);
+      const qid = inp.dataset.source;
+      const a = getAssessment(id);
+      const ev = answerParts((a.answers || {})[qid]).evidence;
+      setEvidence(id, qid, sel ? sel.value : ev, inp.value.trim());
     });
   });
   root.querySelectorAll("[data-note]").forEach((ta) => {

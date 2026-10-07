@@ -1,5 +1,5 @@
 import { state, getAssessment, setStatus, assign, navigate } from "./store.js";
-import { assessmentResult } from "./scoring.js";
+import { assessmentResult, answerParts, optionFor, evidenceTierFor } from "./scoring.js";
 import { esc, STATUS_LABEL } from "./ui.js";
 import {
   scoreCard, topicHeatmap, riskTable, provenanceTable, legend, barRow, bandColor,
@@ -11,6 +11,39 @@ const NEXT_LABEL = {
   submitted: "Mark reviewed",
   reviewed: "Approve",
 };
+
+function evidenceTable(a, fw) {
+  const rows = [];
+  fw.topics.forEach((t) => {
+    t.questions.forEach((q) => {
+      if (q.scored === false) return;
+      const { value, evidence, source } = answerParts((a.answers || {})[q.id]);
+      if (value === undefined || value === null || value === "") return;
+      const option = optionFor(q, value, fw);
+      if (!option) return;
+      const tier = evidenceTierFor(evidence, fw);
+      const penalty = tier && typeof tier.penalty === "number" ? tier.penalty : 0;
+      const effective = Math.max(1, option.score - penalty);
+      const discount = penalty > 0;
+      rows.push(`<tr>
+        <td>${esc(t.name)}</td>
+        <td>${esc(option.label)}</td>
+        <td><span class="pill" style="background:${discount ? "#b45309" : "#334155"}">${esc(tier ? tier.label : "—")}</span></td>
+        <td>${esc(source || "")}</td>
+        <td class="num">${option.score.toFixed(2)}</td>
+        <td class="num">${discount ? `<s>${option.score.toFixed(2)}</s> ` : ""}${effective.toFixed(2)}</td>
+      </tr>`);
+    });
+  });
+  if (!rows.length) return "";
+  return `<h3>Answer evidence</h3>
+    <div class="muted small">A claim scores below proof of the same claim: the last column is the
+      maturity score after the evidence discount.</div>
+    <table class="table evidence-table">
+      <thead><tr><th>Topic</th><th>Answer</th><th>Evidence</th><th>Source</th><th>Score</th><th>Effective</th></tr></thead>
+      <tbody>${rows.join("")}</tbody>
+    </table>`;
+}
 
 export function resultsView(id) {
   const a = getAssessment(id);
@@ -73,6 +106,8 @@ export function resultsView(id) {
       ${topicHeatmap(result.results, fw)}
       <h3>Priority actions</h3>
       ${riskTable(result.results)}
+
+      ${evidenceTable(a, fw)}
 
       <h3>Provenance / audit trail</h3>
       <div class="muted small">Framework version ${esc(a.frameworkVersion)} ·

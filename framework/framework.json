@@ -1,7 +1,7 @@
 {
   "id": "investor-esg-assessment",
   "name": "Investor ESG Assessment Framework",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Configurable framework for investor firms to assess ESG risk and management maturity across portfolio companies. Everything here is data: edit this file to change topics, questions, sector weights or scoring bands without touching application code.",
   "scoreScale": {
     "min": 1,
@@ -30,6 +30,15 @@
         "label": "Independently verified, targets on track",
         "score": 5
       }
+    ]
+  },
+  "evidenceTiers": {
+    "default": "documented",
+    "note": "How well an answer is proven. penalty is deducted from the maturity score (floored at 1), so a claim scores below proof of the same claim, in clean whole-number steps.",
+    "tiers": [
+      { "id": "claimed", "label": "Claimed (statement only)", "penalty": 2 },
+      { "id": "documented", "label": "Documented (board policy / report)", "penalty": 1 },
+      { "id": "verified", "label": "Verified (independent assurance)", "penalty": 0 }
     ]
   },
   "riskBands": [

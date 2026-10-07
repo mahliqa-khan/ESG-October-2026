@@ -276,6 +276,17 @@ h3 { margin: 22px 0 10px; font-size: 15px; color: var(--navy); }
   font-size: 13px;
 }
 .q-control input[type="number"] { width: 140px; display: inline-block; }
+.evidence-row { display: flex; gap: 8px; margin-top: 6px; }
+.evidence-row select, .evidence-row input[type="text"] {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 12px;
+}
+.evidence-row select { flex: 0 0 auto; }
+.evidence-row input[type="text"] { flex: 1 1 auto; }
+.evidence-table td { font-size: 12px; }
 
 .workflow {
   display: flex;

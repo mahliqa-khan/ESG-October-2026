@@ -17,6 +17,32 @@ export function optionFor(question, value, framework) {
   return scale.find((o) => String(o.score) === String(value)) || null;
 }
 
+export function answerParts(answer) {
+  if (answer && typeof answer === "object") {
+    return {
+      value: answer.value,
+      evidence: answer.evidence || null,
+      source: answer.source || "",
+    };
+  }
+  return { value: answer, evidence: null, source: "" };
+}
+
+export function evidenceTiers(framework) {
+  return (framework && framework.evidenceTiers && framework.evidenceTiers.tiers) || [];
+}
+
+export function evidenceTierFor(evidence, framework) {
+  const tiers = evidenceTiers(framework);
+  const id = evidence || (framework && framework.evidenceTiers && framework.evidenceTiers.default);
+  return tiers.find((t) => t.id === id) || null;
+}
+
+export function evidencePenalty(evidence, framework) {
+  const tier = evidenceTierFor(evidence, framework);
+  return tier && typeof tier.penalty === "number" ? tier.penalty : 0;
+}
+
 export function normSectors(input) {
   if (!input) return [];
   if (typeof input === "string") return [{ id: input, weight: 1 }];
@@ -52,12 +78,13 @@ export function maturityOf(topic, answers, framework) {
   let answered = 0;
   topic.questions.forEach((q) => {
     if (q.scored === false) return;
-    const value = answers[q.id];
+    const { value, evidence } = answerParts(answers[q.id]);
     if (value === undefined || value === null || value === "") return;
     const option = optionFor(q, value, framework);
     if (!option) return;
     const w = q.weight == null ? 1 : q.weight;
-    weighted += option.score * w;
+    const effective = Math.max(1, option.score - evidencePenalty(evidence, framework));
+    weighted += effective * w;
     weightSum += w;
     answered += 1;
   });
@@ -84,8 +111,8 @@ export function coverageOf(topic, answers, framework) {
   const scored = topic.questions.filter((q) => q.scored !== false);
   if (!scored.length) return 1;
   const done = scored.filter((q) => {
-    const v = answers[q.id];
-    return v !== undefined && v !== null && v !== "";
+    const { value } = answerParts(answers[q.id]);
+    return value !== undefined && value !== null && value !== "";
   }).length;
   return round(done / scored.length, 2);
 }
