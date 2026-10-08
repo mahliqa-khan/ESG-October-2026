@@ -575,15 +575,18 @@
   "pillars": [
     {
       "id": "E",
-      "name": "Environmental"
+      "name": "Environmental",
+      "description": "How the company affects and depends on the natural environment — climate and emissions, energy, water, waste, biodiversity and materials."
     },
     {
       "id": "S",
-      "name": "Social"
+      "name": "Social",
+      "description": "How the company treats people — its workforce (health & safety, labour, diversity), its customers (product safety, welfare) and its supply-chain workers."
     },
     {
       "id": "G",
-      "name": "Governance"
+      "name": "Governance",
+      "description": "How the company is run and controlled — board oversight, business ethics and anti-corruption, data privacy and security, and tax transparency."
     }
   ],
   "topics": [

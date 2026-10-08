@@ -192,6 +192,28 @@ export function removeAssessment(id) {
   emit();
 }
 
+export function loadExample() {
+  const a = createAssessment({
+    investee: "Northwind Toy Manufacturing",
+    industries: [{ id: "CG-TO", weight: 100 }],
+    holdingWeight: 2.5,
+    period: "FY2025",
+  });
+  const mock = [
+    ["ps-1", 4, "documented", "Product Safety Policy v3, 2025"],
+    ["ps-2", 3, "documented", "QA complaints log"],
+    ["ps-3", 2, "claimed", "stated on supplier call"],
+    ["sc-1", 3, "documented", "Supplier Code of Conduct, 2024"],
+    ["sc-2", 2, "claimed", "website CSR page"],
+    ["sc-3", 1, "claimed", "no evidence provided"],
+  ];
+  mock.forEach(([qid, value, evidence, source]) => {
+    setAnswer(a.id, qid, value);
+    setEvidence(a.id, qid, evidence, source);
+  });
+  return a;
+}
+
 export function exportJSON() {
   return JSON.stringify(
     { exportedAt: new Date().toISOString(), framework: state.framework, assessments: state.assessments },

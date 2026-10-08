@@ -1,8 +1,9 @@
 import { state, getAssessment, setStatus, assign, navigate } from "./store.js";
-import { assessmentResult, answerParts, optionFor, evidenceTierFor } from "./scoring.js";
-import { esc, STATUS_LABEL } from "./ui.js";
+import { assessmentResult, answerParts, optionFor, evidenceTierFor, bandFor } from "./scoring.js";
+import { esc, STATUS_LABEL, unitLabel, industryIndex } from "./ui.js";
 import {
-  scoreCard, topicHeatmap, riskTable, provenanceTable, legend, barRow, bandColor,
+  scoreCard, riskTable, provenanceTable, legend, barRow, bandColor,
+  sasbTopicName,
 } from "./dashboard.js";
 
 const NEXT = { draft: "submitted", submitted: "reviewed", reviewed: "approved" };
@@ -45,6 +46,91 @@ function evidenceTable(a, fw) {
     </table>`;
 }
 
+function howToRead(fw, result) {
+  const pillarList = fw.pillars
+    .map((p) => `<li><strong>${esc(p.name)}</strong> — ${esc(p.description || "")}</li>`)
+    .join("");
+  const max = (fw.scoreScale && fw.scoreScale.max) || 5;
+  const bandList = (fw.riskBands || [])
+    .map((b, i) => {
+      const from = i === 0 ? 0 : (fw.riskBands[i - 1].max + 0.01);
+      return `<li><strong>${esc(b.label)}</strong> — ${from.toFixed(2)} to ${b.max > max ? max.toFixed(2) : b.max.toFixed(2)}: ${esc(b.action)}</li>`;
+    })
+    .join("");
+  return `
+    <section class="explain-panel">
+      <h3>How to read this page</h3>
+      <p>Every score on this page is on a scale of <strong>0 to ${max}</strong>, where
+        <strong>0 is no risk</strong> and <strong>${max} is the highest risk</strong>. A score of
+        ${max} means the issue is fully exposed and the company is doing nothing about it; 0 means
+        the risk is fully managed away.</p>
+      <p><strong>Residual risk</strong> is the risk that is <em>left over</em> after allowing for how
+        well the company manages each issue. Every topic has two parts:</p>
+      <ul>
+        <li><strong>Exposure</strong> — how much this issue matters for the industry (set from the
+          SASB Standards: listed = 5, not listed = 2). It does not change company to company.</li>
+        <li><strong>Maturity</strong> — how well the company manages it, from the questionnaire
+          answers (after the evidence discount). Higher is better.</li>
+      </ul>
+      <p class="muted">A topic with high exposure and weak management leaves a high residual risk.
+        Topics with no answers fall back to exposure only.</p>
+      <p>Scores map to risk bands as follows:</p>
+      <ul>${bandList}</ul>
+      <p>The result is grouped into three pillars:</p>
+      <ul>${pillarList}</ul>
+    </section>`;
+}
+
+function sasbScope(a, fw, result) {
+  const units = a.industries || a.sectors || a.sector;
+  const idx = industryIndex(fw);
+  const codes = (Array.isArray(units) ? units : [{ id: units, weight: 100 }])
+    .map((u) => (typeof u === "string" ? u : u.id))
+    .filter(Boolean);
+  const listed = result.results.filter((r) => r.exposure >= 3);
+  const notListed = result.results.filter((r) => r.exposure < 3);
+
+  const industryLine = codes
+    .map((c) => {
+      const meta = idx[c];
+      return `<span class="scope-ind">${esc(meta ? meta.name : c)} <code>${esc(c)}</code></span>`;
+    })
+    .join(", ");
+
+  const listedRows = listed
+    .map((r) => {
+      const sasb = sasbTopicName(r.topicId, fw);
+      return `<tr>
+        <td>${esc(r.name)}</td>
+        <td>${esc(sasb || "—")}</td>
+        <td class="num">${r.exposure}</td>
+        <td class="num"><strong>${r.residual.toFixed(2)}</strong></td>
+      </tr>`;
+    })
+    .join("");
+
+  const notListedLine = notListed.length
+    ? `<div class="muted small">Not material for this industry under SASB (exposure 2):
+        ${notListed.map((r) => esc(r.name)).join(", ")}.</div>`
+    : "";
+
+  return `
+    <section class="scope-panel">
+      <h3>Scope — what applies to this company</h3>
+      <div class="scope-source">Industry per <strong>SASB Standards</strong> (IFRS Foundation):
+        ${industryLine || "not set"}.</div>
+      <div class="muted small">The topics below are the SASB disclosure topics for this industry.
+        Our topic list and these mappings were fact-checked against the SASB Standards
+        (framework v${esc(fw.version)}). Topics SASB does not list are still asked, but carry low
+        exposure and do not drive the result.</div>
+      <table class="table">
+        <thead><tr><th>Our topic</th><th>SASB disclosure topic</th><th>Exposure</th><th>Residual</th></tr></thead>
+        <tbody>${listedRows || '<tr><td colspan="4" class="muted">No industry selected.</td></tr>'}</tbody>
+      </table>
+      ${notListedLine}
+    </section>`;
+}
+
 export function resultsView(id) {
   const a = getAssessment(id);
   if (!a) return `<section class="panel"><p>Assessment not found.</p></section>`;
@@ -55,9 +141,9 @@ export function resultsView(id) {
     .map((p) => {
       const s = result.pillars[p.id];
       if (!s) return "";
-      const band = result.results.filter((r) => r.pillar === p.id)
-        .reduce((worst, r) => (r.residual > worst.residual ? r : worst), { residual: 0 }).band;
-      return scoreCard(p.name, s.score, band, `${s.topicsAnswered}/${s.topics} topics`);
+      const band = s.score == null ? "n/a" : bandFor(s.score, fw).label;
+      const coverage = `${s.topicsAnswered} of ${s.topics} topics answered`;
+      return scoreCard(p.name, s.score, band, coverage);
     })
     .join("");
 
@@ -82,10 +168,16 @@ export function resultsView(id) {
       </div>
 
       <div class="score-cards">
-        ${scoreCard("Residual risk", result.overall, result.band.label, `${Math.round(result.coverage * 100)}% coverage`)}
+        ${scoreCard("Residual risk", result.overall, result.band.label,
+          `${result.results.filter((r) => r.coverage > 0).length} of ${result.results.length} topics answered`)}
         ${pillarCards}
       </div>
+      ${legend()}
       <div class="banner">${esc(result.band.action)}</div>
+
+      ${howToRead(fw, result)}
+
+      ${sasbScope(a, fw, result)}
 
       ${a.status === "approved" ? "" : `
       <div class="workflow">
@@ -101,10 +193,7 @@ export function resultsView(id) {
       </div>
       <div class="muted small" data-error></div>`}
 
-      ${legend()}
       <h3>Risk by topic</h3>
-      ${topicHeatmap(result.results, fw)}
-      <h3>Priority actions</h3>
       ${riskTable(result.results)}
 
       ${evidenceTable(a, fw)}

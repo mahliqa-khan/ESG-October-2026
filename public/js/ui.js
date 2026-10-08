@@ -1,4 +1,4 @@
-import { state, navigate, createAssessment, setActor, removeAssessment } from "./store.js";
+import { state, navigate, createAssessment, setActor, removeAssessment, loadExample } from "./store.js";
 import { assessmentResult, portfolioResult, normSectors } from "./scoring.js";
 import { scoreCard, portfolioHeatmap, legend, bandColor, barRow } from "./dashboard.js";
 
@@ -117,6 +117,73 @@ export function portfolioView() {
         <tbody>${list}</tbody>
       </table>
     </section>`;
+}
+
+export function historyView() {
+  const fw = state.framework;
+  const rows = state.assessments
+    .slice()
+    .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+
+  if (!rows.length) {
+    return `
+      <section class="panel">
+        <h2>History</h2>
+        <p class="muted">No past runs yet. Create an assessment, or load the worked example.</p>
+        <button class="btn primary" data-action="new">New assessment</button>
+        <button class="btn" data-action="example">Load example</button>
+      </section>`;
+  }
+
+  const list = rows
+    .map((a) => {
+      const r = assessmentResult(a, fw);
+      return `
+        <tr>
+          <td>${new Date(a.updatedAt || a.createdAt).toLocaleString()}</td>
+          <td><a href="#/results/${a.id}">${esc(a.investee)}</a></td>
+          <td>${esc(unitLabel(a.industries || a.sectors, fw))}</td>
+          <td>${esc(a.period || "—")}</td>
+          <td class="num"><strong>${r.overall == null ? "—" : r.overall.toFixed(2)}</strong></td>
+          <td><span class="pill" style="background:${bandColor(r.band.label)}">${r.band.label}</span></td>
+          <td>${esc(STATUS_LABEL[a.status] || a.status)}</td>
+          <td class="num">${Math.round(r.coverage * 100)}%</td>
+        </tr>`;
+    })
+    .join("");
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>History</h2>
+        <div class="head-actions">
+          <button class="btn" data-action="example">Load example</button>
+          <button class="btn primary" data-action="new">New assessment</button>
+        </div>
+      </div>
+      <p class="muted">Every assessment, most recently updated first. Select one to reopen its results.</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Run</th><th>Investee</th><th>Industry</th><th>Period</th>
+            <th>Residual</th><th>Band</th><th>Status</th><th>Coverage</th>
+          </tr>
+        </thead>
+        <tbody>${list}</tbody>
+      </table>
+    </section>`;
+}
+
+export function bindHistory(root) {
+  root.querySelectorAll('[data-action="new"]').forEach((b) =>
+    b.addEventListener("click", () => navigate("new"))
+  );
+  root.querySelectorAll('[data-action="example"]').forEach((b) =>
+    b.addEventListener("click", () => {
+      const a = loadExample();
+      if (a) navigate("results", { id: a.id });
+    })
+  );
 }
 
 export function newAssessmentView() {

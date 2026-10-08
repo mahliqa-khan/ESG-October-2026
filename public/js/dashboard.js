@@ -51,6 +51,15 @@ export function scoreCard(title, value, band, sub) {
     </div>`;
 }
 
+export function topicSourceFor(topicId, framework) {
+  return ((framework && framework.topicSources) || []).find((s) => s.topicId === topicId) || null;
+}
+
+export function sasbTopicName(topicId, framework) {
+  const src = topicSourceFor(topicId, framework);
+  return src && src.sasb && src.sasb.topic ? src.sasb.topic : null;
+}
+
 export function topicHeatmap(topicResults, framework) {
   const cells = topicResults
     .map(

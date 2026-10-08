@@ -287,6 +287,30 @@ h3 { margin: 22px 0 10px; font-size: 15px; color: var(--navy); }
 .evidence-row select { flex: 0 0 auto; }
 .evidence-row input[type="text"] { flex: 1 1 auto; }
 .evidence-table td { font-size: 12px; }
+.scope-panel {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid #334155;
+  border-radius: 6px;
+  background: #f8fafb;
+}
+.scope-panel h3 { margin-top: 0; }
+.scope-source { font-size: 14px; margin-bottom: 4px; }
+.scope-ind { font-weight: 600; }
+.scope-ind code { font-weight: 400; color: var(--muted); }
+.explain-panel {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid #2563eb;
+  border-radius: 6px;
+  background: #f6f9ff;
+}
+.explain-panel h3 { margin-top: 0; }
+.explain-panel ul { margin: 6px 0 10px; padding-left: 20px; }
+.explain-panel li { font-size: 13px; margin-bottom: 3px; }
+.explain-panel p { font-size: 13px; margin: 6px 0; }
 
 .workflow {
   display: flex;

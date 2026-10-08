@@ -1,7 +1,7 @@
 import { state, load, setFramework, navigate, subscribe } from "./store.js";
 import {
-  actorBar, portfolioView, newAssessmentView,
-  bindPortfolio, bindNewAssessment, bindActor,
+  actorBar, portfolioView, newAssessmentView, historyView,
+  bindPortfolio, bindNewAssessment, bindActor, bindHistory,
 } from "./ui.js";
 import { questionnaireView, bindQuestionnaire } from "./questionnaire.js";
 import { resultsView, bindResults } from "./results.js";
@@ -13,6 +13,7 @@ function parseHash() {
   const parts = hash.split("/").filter(Boolean);
   if (!parts.length) return { name: "portfolio", params: {} };
   if (parts[0] === "new") return { name: "new", params: {} };
+  if (parts[0] === "history") return { name: "history", params: {} };
   return { name: parts[0], params: { id: parts[1] } };
 }
 
@@ -26,6 +27,7 @@ function header() {
       </div>
       <nav>
         <a href="#/portfolio" class="${state.route.name === "portfolio" ? "active" : ""}">Portfolio</a>
+        <a href="#/history" class="${state.route.name === "history" ? "active" : ""}">History</a>
         <a href="#/new" class="${state.route.name === "new" ? "active" : ""}">New assessment</a>
       </nav>
     </header>`;
@@ -47,6 +49,7 @@ export function render() {
   const r = state.route;
   let body = "";
   if (r.name === "new") body = newAssessmentView();
+  else if (r.name === "history") body = historyView();
   else if (r.name === "assessment") body = questionnaireView(r.params.id);
   else if (r.name === "results") body = resultsView(r.params.id);
   else body = portfolioView();
@@ -55,6 +58,7 @@ export function render() {
 
   bindActor(root);
   if (r.name === "new") bindNewAssessment(root);
+  else if (r.name === "history") bindHistory(root);
   else if (r.name === "assessment") bindQuestionnaire(root, r.params.id);
   else if (r.name === "results") bindResults(root, r.params.id);
   else bindPortfolio(root);
