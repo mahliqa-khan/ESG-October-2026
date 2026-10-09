@@ -1,0 +1,446 @@
+{
+  "note": "Illustrative answer sets for backtesting. Only as good as these answers; replace with answers from public disclosures before drawing conclusions. Format: question id -> [score 1-5, evidence tier claimed|documented|verified].",
+  "companies": [
+    {
+      "name": "Boeing",
+      "industry": "RT-AE",
+      "expected": "High / Severe",
+      "why": "737 MAX safety crises and quality/oversight failures.",
+      "dataStatus": "ILLUSTRATIVE - not sourced",
+      "answers": {
+        "energy-1": [
+          3,
+          "documented"
+        ],
+        "energy-2": [
+          2,
+          "claimed"
+        ],
+        "energy-3": [
+          1,
+          "claimed"
+        ],
+        "wa-1": [
+          3,
+          "documented"
+        ],
+        "wa-2": [
+          2,
+          "claimed"
+        ],
+        "wa-3": [
+          1,
+          "claimed"
+        ],
+        "pd-1": [
+          3,
+          "documented"
+        ],
+        "pd-2": [
+          2,
+          "claimed"
+        ],
+        "pd-3": [
+          1,
+          "claimed"
+        ],
+        "materials-1": [
+          3,
+          "documented"
+        ],
+        "materials-2": [
+          2,
+          "claimed"
+        ],
+        "materials-3": [
+          1,
+          "claimed"
+        ],
+        "ds-1": [
+          3,
+          "documented"
+        ],
+        "ds-2": [
+          2,
+          "claimed"
+        ],
+        "ds-3": [
+          1,
+          "claimed"
+        ],
+        "ps-1": [
+          3,
+          "documented"
+        ],
+        "ps-2": [
+          2,
+          "claimed"
+        ],
+        "ps-3": [
+          1,
+          "claimed"
+        ],
+        "be-1": [
+          3,
+          "documented"
+        ],
+        "be-2": [
+          2,
+          "claimed"
+        ],
+        "be-3": [
+          1,
+          "claimed"
+        ]
+      }
+    },
+    {
+      "name": "Wells Fargo",
+      "industry": "FN-CB",
+      "expected": "High / Severe",
+      "why": "Fake-accounts / sales-practices scandal.",
+      "dataStatus": "ILLUSTRATIVE - not sourced",
+      "answers": {
+        "pd-1": [
+          3,
+          "documented"
+        ],
+        "pd-2": [
+          2,
+          "claimed"
+        ],
+        "pd-3": [
+          1,
+          "claimed"
+        ],
+        "ds-1": [
+          3,
+          "documented"
+        ],
+        "ds-2": [
+          2,
+          "claimed"
+        ],
+        "ds-3": [
+          1,
+          "claimed"
+        ],
+        "aa-1": [
+          3,
+          "documented"
+        ],
+        "aa-2": [
+          2,
+          "claimed"
+        ],
+        "aa-3": [
+          1,
+          "claimed"
+        ],
+        "be-1": [
+          3,
+          "documented"
+        ],
+        "be-2": [
+          2,
+          "claimed"
+        ],
+        "be-3": [
+          1,
+          "claimed"
+        ],
+        "sr-1": [
+          3,
+          "documented"
+        ],
+        "sr-2": [
+          2,
+          "claimed"
+        ],
+        "sr-3": [
+          1,
+          "claimed"
+        ]
+      }
+    },
+    {
+      "name": "Schneider Electric",
+      "industry": "RT-EE",
+      "expected": "Low / Moderate",
+      "why": "Long-standing sustainability and ESG ratings leader.",
+      "dataStatus": "ILLUSTRATIVE - not sourced",
+      "answers": {
+        "energy-1": [
+          5,
+          "verified"
+        ],
+        "energy-2": [
+          4,
+          "verified"
+        ],
+        "energy-3": [
+          4,
+          "documented"
+        ],
+        "wa-1": [
+          5,
+          "verified"
+        ],
+        "wa-2": [
+          4,
+          "verified"
+        ],
+        "wa-3": [
+          4,
+          "documented"
+        ],
+        "pd-1": [
+          5,
+          "verified"
+        ],
+        "pd-2": [
+          4,
+          "verified"
+        ],
+        "pd-3": [
+          4,
+          "documented"
+        ],
+        "materials-1": [
+          5,
+          "verified"
+        ],
+        "materials-2": [
+          4,
+          "verified"
+        ],
+        "materials-3": [
+          4,
+          "documented"
+        ],
+        "ps-1": [
+          5,
+          "verified"
+        ],
+        "ps-2": [
+          4,
+          "verified"
+        ],
+        "ps-3": [
+          4,
+          "documented"
+        ],
+        "be-1": [
+          5,
+          "verified"
+        ],
+        "be-2": [
+          4,
+          "verified"
+        ],
+        "be-3": [
+          4,
+          "documented"
+        ]
+      }
+    },
+    {
+      "name": "Orsted",
+      "industry": "IF-EU",
+      "expected": "Low / Moderate",
+      "why": "Widely cited renewables transition leader.",
+      "dataStatus": "ILLUSTRATIVE - not sourced",
+      "answers": {
+        "ghg-1": [
+          5,
+          "verified"
+        ],
+        "ghg-2": [
+          4,
+          "verified"
+        ],
+        "ghg-3": [
+          4,
+          "documented"
+        ],
+        "aq-1": [
+          5,
+          "verified"
+        ],
+        "aq-2": [
+          4,
+          "verified"
+        ],
+        "aq-3": [
+          4,
+          "documented"
+        ],
+        "ww-1": [
+          5,
+          "verified"
+        ],
+        "ww-2": [
+          4,
+          "verified"
+        ],
+        "ww-3": [
+          4,
+          "documented"
+        ],
+        "wa-1": [
+          5,
+          "verified"
+        ],
+        "wa-2": [
+          4,
+          "verified"
+        ],
+        "wa-3": [
+          4,
+          "documented"
+        ],
+        "aa-1": [
+          5,
+          "verified"
+        ],
+        "aa-2": [
+          4,
+          "verified"
+        ],
+        "aa-3": [
+          4,
+          "documented"
+        ],
+        "hs-1": [
+          5,
+          "verified"
+        ],
+        "hs-2": [
+          4,
+          "verified"
+        ],
+        "hs-3": [
+          4,
+          "documented"
+        ],
+        "bm-1": [
+          5,
+          "verified"
+        ],
+        "bm-2": [
+          4,
+          "verified"
+        ],
+        "bm-3": [
+          4,
+          "documented"
+        ],
+        "ci-1": [
+          5,
+          "verified"
+        ],
+        "ci-2": [
+          4,
+          "verified"
+        ],
+        "ci-3": [
+          4,
+          "documented"
+        ],
+        "sr-1": [
+          5,
+          "verified"
+        ],
+        "sr-2": [
+          4,
+          "verified"
+        ],
+        "sr-3": [
+          4,
+          "documented"
+        ]
+      }
+    },
+    {
+      "name": "Microsoft",
+      "industry": "TC-SI",
+      "expected": "Low / Moderate",
+      "why": "Mature governance, disclosure and assurance.",
+      "dataStatus": "ILLUSTRATIVE - not sourced",
+      "answers": {
+        "energy-1": [
+          5,
+          "verified"
+        ],
+        "energy-2": [
+          4,
+          "verified"
+        ],
+        "energy-3": [
+          4,
+          "documented"
+        ],
+        "cp-1": [
+          5,
+          "verified"
+        ],
+        "cp-2": [
+          4,
+          "verified"
+        ],
+        "cp-3": [
+          4,
+          "documented"
+        ],
+        "ds-1": [
+          5,
+          "verified"
+        ],
+        "ds-2": [
+          4,
+          "verified"
+        ],
+        "ds-3": [
+          4,
+          "documented"
+        ],
+        "div-1": [
+          5,
+          "verified"
+        ],
+        "div-2": [
+          4,
+          "verified"
+        ],
+        "div-3": [
+          4,
+          "documented"
+        ],
+        "cb-1": [
+          5,
+          "verified"
+        ],
+        "cb-2": [
+          4,
+          "verified"
+        ],
+        "cb-3": [
+          4,
+          "documented"
+        ],
+        "sr-1": [
+          5,
+          "verified"
+        ],
+        "sr-2": [
+          4,
+          "verified"
+        ],
+        "sr-3": [
+          4,
+          "documented"
+        ]
+      }
+    }
+  ]
+}
