@@ -4,7 +4,8 @@
   "private": true,
   "description": "Investor ESG assessment tool with SASB-grounded scoring",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "rm -rf public/framework && cp -r framework public/framework"
   },
   "engines": {
     "node": ">=18"
