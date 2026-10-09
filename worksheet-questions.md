@@ -28,15 +28,26 @@ for topics in `worksheet-weightings.md`.
 - **Pillar:** E
 - **SASB topic:** Greenhouse Gas Emissions
 - **GRI ref:** GRI 305 Emissions
-- **SASB metrics:** 
-- **Coverage verdict:** 
+- **SASB metrics:** *(from SASB's GHG Emissions disclosure topic — CONFIRM exact metric codes in the
+  industry standard before signing off)*
+  1. Gross global Scope 1 emissions, and the percentage covered under emissions-limiting regulations
+  2. Discussion of long-term and short-term strategy/plan to manage Scope 1 emissions, emissions
+     reduction targets, and performance against those targets
+  3. *(some industries add)* gross global Scope 2 emissions; Scope 3 emissions by category
+- **Coverage verdict:** partial
 
 | Question id | Question | Covers which SASB metric? |
 |---|---|---|
-| ghg-1 | Does the company have a climate policy and a board-level owner for emissions? | |
-| ghg-2 | Are Scope 1 and 2 emissions measured, and is Scope 3 assessed for material categories? | |
-| ghg-3 | Are emissions targets set with a baseline year, and progress independently verified? | |
-| ghg-data | Report Scope 1 and 2 emissions (tCO2e) for the latest period | |
+| ghg-1 | Does the company have a climate policy and a board-level owner for emissions? | No SASB metric — a governance/policy question we added |
+| ghg-2 | Are Scope 1 and 2 emissions measured, and is Scope 3 assessed for material categories? | Metric 1 (Scope 1 measurement); partly metric 3 (Scope 3) |
+| ghg-3 | Are emissions targets set with a baseline year, and progress independently verified? | Metric 2 (targets + performance against them) |
+| ghg-data | Report Scope 1 and 2 emissions (tCO2e) for the latest period | Metric 1 (Scope 1 value); metric 3 (Scope 2) where the industry requires it |
+
+**Gap found:** SASB metric 1 requires the **percentage of Scope 1 covered under emissions-limiting
+regulations** — we do not ask for it. Add a question, or record as an accepted gap.
+
+**Note:** the SASB metrics above still need to be confirmed against the actual industry standard,
+and the exact codes vary by industry.
 
 ### 2. Air Quality  (air-quality)
 

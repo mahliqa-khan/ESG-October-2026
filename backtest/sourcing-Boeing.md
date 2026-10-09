@@ -14,6 +14,30 @@ into a real backtest.
 Record the exact document and page. If you cannot find it, the honest answer is **claimed** (or
 blank), not **documented**.
 
+## Boeing documents found (from boeing.com, to open and read)
+
+These are Boeing's own published documents, located on boeing.com/sustainability. They are the
+sources to cite. **They have not been read here** — the score and tier for each question must be
+set by whatever the document actually says.
+
+| Document | Likely serves | Link |
+|---|---|---|
+| Global Sustainability Report (2026) | energy, waste, materials, product-design, safety | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/2026-boeing-sustainability-report.pdf |
+| Boeing Environmental Policy | energy-1, wa-1, materials-1 | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/environmental-policy.pdf |
+| Code of Conduct | be-1, be-2, be-3 | https://www.boeing.com/content/dam/boeing/v2/company/ethics/documents/code-of-conduct.pdf |
+| GHG Assurance Statement | ghg (evidence: verified) | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/ghg_emissions_assurance_statement.pdf |
+| GHG Emissions Supplement | ghg-2 (data) | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/GHG_Emissions_Supplement.pdf |
+| ISO 14001 Certificates | energy, wa (evidence: verified) | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/ISO_14001_Certificates.pdf |
+| TCFD Report | business-model, climate-physical | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/tcfd-report.pdf |
+| Supply Chain Sustainability fact sheet | materials, supply-chain | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/Supply%20Chain_FactSheet.pdf |
+| Global Tax Governance & Compliance | tax | https://www.boeing.com/content/dam/boeing/v2/company/sustainability/documents/Boeing_Global_Tax_Governance_and_Compliance.pdf |
+| Code of Conduct + Ethics Line | be-1 | https://www.boeing.com/company/ethics-and-compliance |
+| Annual Report | governance, board oversight | https://materials.proxyvote.com/Approved/097023/20260217/AR_625422/HTML1/default.htm |
+
+**Note:** the fact that a document exists does not mean the question scores high. E.g. a published
+Code of Conduct supports `be-1`, but does not by itself lift `be-2` (training) or `be-3`
+(whistleblowing outcomes) if the report does not evidence them.
+
 ## How to set the evidence tier
 
 | You found | Tier |
