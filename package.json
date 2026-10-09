@@ -1,0 +1,12 @@
+{
+  "name": "esg-assessment",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Investor ESG assessment tool with SASB-grounded scoring",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
