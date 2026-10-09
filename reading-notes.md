@@ -20,11 +20,13 @@ a report for our own company.
 ## Step tracker
 
 - [x] **Step 0 — Scope.** Decided: a tool for investor firms, not our own report.
-- [~] **Step 1 — Methodology as data.** Topics, questions, scoring rules, sector mappings. Output: `framework/framework.json`.
-- [ ] **Step 2 — Scoring engine.** Exposure vs management maturity → residual risk.
-- [ ] **Step 3 — App: questionnaires.** Generated per investee + sector, with evidence capture.
-- [ ] **Step 4 — App: scoring and dashboard.** Per-topic, per-pillar and portfolio views.
-- [ ] **Step 5 — Governance.** Reviewer/approver separation, provenance log, export.
+- [x] **Step 1 — Methodology as data.** Topics, questions, scoring rules, sector mappings. Output: `framework/framework.json`.
+- [x] **Step 2 — Scoring engine.** Exposure vs management maturity → residual risk.
+- [x] **Step 3 — App: questionnaires.** Generated per investee + sector, with evidence capture.
+- [x] **Step 4 — App: scoring and dashboard.** Per-topic, per-pillar and portfolio views.
+- [x] **Step 5 — Governance.** Reviewer/approver separation, provenance log, export.
+
+Superseded — see `TODO.md` for the current status and next steps.
 
 ## Reading priority
 
